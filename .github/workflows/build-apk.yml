@@ -18,10 +18,8 @@ jobs:
 
       - name: Extract ZIP file
         run: |
-          # ZIP file ka naam yahan likho (jo aapne upload kiya hai)
-          unzip -o *.zip -d extracted/
+          unzip -o AndroidDEX_Android_Project_25.zip -d extracted/
           ls -la extracted/
-          # Extract ke baad files ko root me copy karo
           cp -r extracted/*/* . || cp -r extracted/* .
           ls -la
 
