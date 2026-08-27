@@ -1,0 +1,44 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: List files (debug)
+        run: ls -la
+
+      - name: Extract ZIP file
+        run: |
+          # ZIP file ka naam yahan likho (jo aapne upload kiya hai)
+          unzip -o *.zip -d extracted/
+          ls -la extracted/
+          # Extract ke baad files ko root me copy karo
+          cp -r extracted/*/* . || cp -r extracted/* .
+          ls -la
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Build Debug APK
+        run: ./gradlew assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
